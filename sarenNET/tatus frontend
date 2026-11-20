@@ -1,0 +1,474 @@
+[1mdiff --git a/api.py b/api.py[m
+[1mindex 3979c15..2c2e974 100644[m
+[1m--- a/api.py[m
+[1m+++ b/api.py[m
+[36m@@ -17,7 +17,7 @@[m [mdef index():[m
+     if request.method == "POST":[m
+         router_device = {[m
+             'device_type': 'cisco_ios_telnet',[m
+[31m-            'ip': '192.168.10.215',[m
+[32m+[m[32m            'ip': '192.168.10.60',[m
+             'port': 32770,[m
+             'username': 'admin',[m
+             'password': 'eve123',[m
+[1mdiff --git a/lesson.py b/lesson.py[m
+[1mindex 816e838..85b59ac 100644[m
+[1m--- a/lesson.py[m
+[1m+++ b/lesson.py[m
+[36m@@ -2,7 +2,7 @@[m [mfrom netmiko import ConnectHandler[m
+ [m
+ router_device = {[m
+     'device_type': 'cisco_ios_telnet',[m
+[31m-    'ip': '192.168.10.235',[m
+[32m+[m[32m    'ip': '192.168.10.60',[m
+     'port': 32770,[m
+     'username': 'admin',[m
+     'password': 'eve123',[m
+[1mdiff --git a/templates/index.html b/templates/index.html[m
+[1mindex e924e60..db4427b 100644[m
+[1m--- a/templates/index.html[m
+[1m+++ b/templates/index.html[m
+[36m@@ -1,337 +1,168 @@[m
+[31m-<!DOCTYPE html>[m
+[32m+[m[32m<!doctype html>[m
+ <html lang="en">[m
+ <head>[m
+[31m-    <meta charset="UTF-8">[m
+[31m-    <meta name="viewport" content="width=device-width, initial-scale=1.0">[m
+[31m-    <title>NETWORKING 102 | Terminal</title>[m
+[31m-    <!-- Google Fonts -->[m
+[31m-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@400;600&display=swap" rel="stylesheet">[m
+[31m-    [m
+[32m+[m[32m    <meta charset="utf-8">[m
+[32m+[m[32m    <meta name="viewport" content="width=device-width, initial-scale=1">[m
+[32m+[m[32m    <title>Router Status | Networking 102</title>[m
+     <style>[m
+         :root {[m
+[31m-            --bg-base: #0d1117;[m
+[31m-            --bg-panel: rgba(22, 27, 34, 0.8);[m
+[31m-            --text-main: #c9d1d9;[m
+[31m-            --text-muted: #8b949e;[m
+[31m-            --accent-green: #3fb950;[m
+[31m-            --accent-blue: #58a6ff;[m
+[31m-            --accent-red: #f85149;[m
+[31m-            --border-color: #30363d;[m
+[31m-            --terminal-bg: #010409;[m
+[32m+[m[32m            color-scheme: light;[m
+[32m+[m[32m            font-family: system-ui, -apple-system, "Segoe UI", sans-serif;[m
+[32m+[m[32m            color: #17212b;[m
+[32m+[m[32m            background: #f4f6f8;[m
+         }[m
+ [m
+         * {[m
+             box-sizing: border-box;[m
+[31m-            margin: 0;[m
+[31m-            padding: 0;[m
+         }[m
+ [m
+         body {[m
+[31m-            background-color: var(--bg-base);[m
+[31m-            /* Subtle grid background pattern */[m
+[31m-            background-image: [m
+[31m-                linear-gradient(rgba(48, 54, 61, 0.2) 1px, transparent 1px),[m
+[31m-                linear-gradient(90deg, rgba(48, 54, 61, 0.2) 1px, transparent 1px);[m
+[31m-            background-size: 30px 30px;[m
+[31m-            color: var(--text-main);[m
+[31m-            font-family: 'Inter', sans-serif;[m
+[31m-            line-height: 1.5;[m
+[31m-            min-height: 100vh;[m
+[31m-            display: flex;[m
+[31m-            flex-direction: column;[m
+[31m-        }[m
+[31m-[m
+[31m-        /* --- TOP NAVIGATION BAR --- */[m
+[31m-        .top-nav {[m
+[31m-            background-color: var(--bg-panel);[m
+[31m-            backdrop-filter: blur(10px); /* Glassmorphism effect */[m
+[31m-            border-bottom: 1px solid var(--border-color);[m
+[31m-            padding: 12px 24px;[m
+[31m-            display: flex;[m
+[31m-            justify-content: space-between;[m
+[31m-            align-items: center;[m
+[31m-            font-family: 'Fira Code', monospace;[m
+[31m-            font-size: 0.9rem;[m
+[31m-            position: sticky;[m
+[31m-            top: 0;[m
+[31m-            z-index: 100;[m
+[31m-        }[m
+[31m-[m
+[31m-        .nav-brand {[m
+[31m-            font-weight: 600;[m
+[31m-            color: #ffffff;[m
+[31m-            display: flex;[m
+[31m-            align-items: center;[m
+[31m-            gap: 12px;[m
+[31m-            letter-spacing: 0.5px;[m
+[32m+[m[32m            margin: 0;[m
+         }[m
+ [m
+[31m-        .nav-brand svg {[m
+[31m-            color: var(--accent-green);[m
+[32m+[m[32m        main {[m
+[32m+[m[32m            width: min(100% - 32px, 900px);[m
+[32m+[m[32m            margin: 48px auto;[m
+         }[m
+ [m
+[31m-        .nav-status {[m
+[31m-            display: flex;[m
+[31m-            align-items: center;[m
+[31m-            gap: 8px;[m
+[31m-            color: var(--text-muted);[m
+[31m-            font-size: 0.85rem;[m
+[32m+[m[32m        header,[m
+[32m+[m[32m        .panel,[m
+[32m+[m[32m        .notice,[m
+[32m+[m[32m        .result {[m
+[32m+[m[32m            margin-bottom: 20px;[m
+         }[m
+ [m
+[31m-        .status-dot {[m
+[31m-            width: 8px;[m
+[31m-            height: 8px;[m
+[31m-            background-color: var(--accent-green);[m
+[31m-            border-radius: 50%;[m
+[31m-            box-shadow: 0 0 8px var(--accent-green);[m
+[31m-            animation: pulse 2s infinite;[m
+[32m+[m[32m        header p,[m
+[32m+[m[32m        .panel p,[m
+[32m+[m[32m        .empty {[m
+[32m+[m[32m            color: #526170;[m
+         }[m
+ [m
+[31m-        @keyframes pulse {[m
+[31m-            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(63, 185, 80, 0.7); }[m
+[31m-            70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(63, 185, 80, 0); }[m
+[31m-            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(63, 185, 80, 0); }[m
+[32m+[m[32m        h1,[m
+[32m+[m[32m        h2,[m
+[32m+[m[32m        h3,[m
+[32m+[m[32m        p {[m
+[32m+[m[32m            margin-top: 0;[m
+         }[m
+ [m
+[31m-        /* --- MAIN LAYOUT --- */[m
+[31m-        .main-container {[m
+[31m-            max-width: 1200px;[m
+[31m-            margin: 0 auto;[m
+[31m-            padding: 40px 20px;[m
+[31m-            flex: 1;[m
+[31m-            width: 100%;[m
+[32m+[m[32m        h1 {[m
+[32m+[m[32m            margin-bottom: 8px;[m
+[32m+[m[32m            font-size: clamp(1.8rem, 5vw, 2.4rem);[m
+         }[m
+ [m
+[31m-        /* --- HEADER & ACTION BAR --- */[m
+[31m-        .dashboard-header {[m
+[31m-            display: flex;[m
+[31m-            justify-content: space-between;[m
+[31m-            align-items: flex-end;[m
+[31m-            margin-bottom: 30px;[m
+[31m-            border-bottom: 1px solid var(--border-color);[m
+[31m-            padding-bottom: 20px;[m
+[32m+[m[32m        h2 {[m
+[32m+[m[32m            margin-bottom: 12px;[m
+[32m+[m[32m            font-size: 1.15rem;[m
+         }[m
+ [m
+[31m-        .dashboard-header h1 {[m
+[31m-            font-family: 'Fira Code', monospace;[m
+[31m-            font-size: 1.8rem;[m
+[31m-            color: #ffffff;[m
+[31m-            text-shadow: 0 0 10px rgba(88, 166, 255, 0.3); /* Subtle glow */[m
+[32m+[m[32m        .panel,[m
+[32m+[m[32m        .result,[m
+[32m+[m[32m        .notice,[m
+[32m+[m[32m        .empty {[m
+[32m+[m[32m            padding: 20px;[m
+[32m+[m[32m            border: 1px solid #d8dee5;[m
+[32m+[m[32m            border-radius: 8px;[m
+[32m+[m[32m            background: #fff;[m
+         }[m
+ [m
+[31m-        .dashboard-header p {[m
+[31m-            color: var(--text-muted);[m
+[31m-            font-family: 'Fira Code', monospace;[m
+[31m-            font-size: 0.85rem;[m
+[31m-            margin-top: 5px;[m
+[32m+[m[32m        .panel p {[m
+[32m+[m[32m            margin-bottom: 16px;[m
+         }[m
+ [m
+[31m-        .run-btn {[m
+[31m-            background-color: rgba(63, 185, 80, 0.1);[m
+[31m-            color: var(--accent-green);[m
+[31m-            border: 1px solid var(--accent-green);[m
+[31m-            padding: 10px 24px;[m
+[31m-            font-size: 0.95rem;[m
+[31m-            font-family: 'Fira Code', monospace;[m
+[31m-            font-weight: 600;[m
+[32m+[m[32m        button {[m
+[32m+[m[32m            padding: 10px 16px;[m
+[32m+[m[32m            border: 0;[m
+             border-radius: 6px;[m
+[32m+[m[32m            background: #1769aa;[m
+[32m+[m[32m            color: #fff;[m
+[32m+[m[32m            font: inherit;[m
+[32m+[m[32m            font-weight: 600;[m
+             cursor: pointer;[m
+[31m-            transition: all 0.2s ease;[m
+[31m-            display: flex;[m
+[31m-            align-items: center;[m
+[31m-            gap: 8px;[m
+[31m-        }[m
+[31m-[m
+[31m-        .run-btn:hover {[m
+[31m-            background-color: rgba(63, 185, 80, 0.2);[m
+[31m-            box-shadow: 0 0 15px rgba(63, 185, 80, 0.3);[m
+[31m-            transform: translateY(-1px);[m
+[31m-        }[m
+[31m-[m
+[31m-        .run-btn:active {[m
+[31m-            transform: translateY(1px);[m
+[31m-        }[m
+[31m-[m
+[31m-        .run-btn:disabled {[m
+[31m-            color: var(--text-muted);[m
+[31m-            border-color: var(--border-color);[m
+[31m-            cursor: not-allowed;[m
+[31m-            background: transparent;[m
+[31m-            box-shadow: none;[m
+[31m-            transform: none;[m
+         }[m
+ [m
+[31m-        /* --- TERMINAL CARDS --- */[m
+[31m-        .terminal-window {[m
+[31m-            background-color: var(--terminal-bg);[m
+[31m-            border: 1px solid var(--border-color);[m
+[31m-            border-radius: 8px;[m
+[31m-            margin-bottom: 24px;[m
+[31m-            overflow: hidden;[m
+[31m-            box-shadow: 0 15px 35px rgba(0,0,0,0.6);[m
+[31m-            transition: transform 0.2s ease, border-color 0.2s ease;[m
+[32m+[m[32m        button:hover {[m
+[32m+[m[32m            background: #12588f;[m
+         }[m
+ [m
+[31m-        .terminal-window:hover {[m
+[31m-            border-color: #58a6ff;[m
+[31m-            transform: translateY(-2px);[m
+[32m+[m[32m        button:focus-visible {[m
+[32m+[m[32m            outline: 3px solid #8cc8f4;[m
+[32m+[m[32m            outline-offset: 2px;[m
+         }[m
+ [m
+[31m-        .terminal-header {[m
+[31m-            background-color: var(--bg-panel);[m
+[31m-            padding: 10px 16px;[m
+[31m-            display: flex;[m
+[31m-            align-items: center;[m
+[31m-            border-bottom: 1px solid var(--border-color);[m
+[32m+[m[32m        button:disabled {[m
+[32m+[m[32m            background: #71808e;[m
+[32m+[m[32m            cursor: wait;[m
+         }[m
+ [m
+[31m-        /* Mac-style window buttons */[m
+[31m-        .window-buttons {[m
+[31m-            display: flex;[m
+[31m-            gap: 8px;[m
+[31m-            margin-right: 16px;[m
+[32m+[m[32m        .notice {[m
+[32m+[m[32m            border-color: #e5a3a3;[m
+[32m+[m[32m            background: #fff7f7;[m
+[32m+[m[32m            color: #8e2525;[m
+         }[m
+ [m
+[31m-        .btn-close, .btn-min, .btn-max {[m
+[31m-            width: 12px;[m
+[31m-            height: 12px;[m
+[31m-            border-radius: 50%;[m
+[32m+[m[32m        .notice p {[m
+[32m+[m[32m            margin: 8px 0 0;[m
+[32m+[m[32m            overflow-wrap: anywhere;[m
+         }[m
+[31m-        .btn-close { background-color: #ff5f56; }[m
+[31m-        .btn-min { background-color: #ffbd2e; }[m
+[31m-        .btn-max { background-color: #27c93f; }[m
+ [m
+[31m-        .terminal-title {[m
+[31m-            font-family: 'Fira Code', monospace;[m
+[31m-            font-size: 0.85rem;[m
+[31m-            color: var(--text-muted);[m
+[31m-            flex: 1;[m
+[31m-            text-align: center;[m
+[31m-            letter-spacing: 0.5px;[m
+[32m+[m[32m        .result h3 {[m
+[32m+[m[32m            margin-bottom: 12px;[m
+[32m+[m[32m            font-size: 0.95rem;[m
+         }[m
+ [m
+         pre {[m
+[31m-            padding: 20px;[m
+             margin: 0;[m
+[31m-            font-family: 'Fira Code', monospace;[m
+[31m-            font-size: 0.85rem;[m
+[31m-            color: #e6edf3;[m
+[31m-            line-height: 1.6;[m
+[31m-            overflow-x: auto;[m
+[31m-            max-height: 500px;[m
+[31m-            overflow-y: auto;[m
+[32m+[m[32m            padding: 14px;[m
+[32m+[m[32m            overflow: auto;[m
+[32m+[m[32m            border-radius: 5px;[m
+[32m+[m[32m            background: #f4f6f8;[m
+[32m+[m[32m            color: #17212b;[m
+[32m+[m[32m            font: 0.9rem/1.5 ui-monospace, SFMono-Regular, Consolas, monospace;[m
+             white-space: pre-wrap;[m
+[32m+[m[32m            overflow-wrap: anywhere;[m
+         }[m
+ [m
+[31m-        /* Terminal prompt styling */[m
+[31m-        .terminal-prompt {[m
+[31m-            color: var(--accent-blue);[m
+[31m-            margin-bottom: 12px;[m
+[31m-            display: block;[m
+[31m-            font-weight: bold;[m
+[31m-        }[m
+[31m-[m
+[31m-        /* --- ERROR MESSAGE --- */[m
+[31m-        .error-box {[m
+[31m-            background-color: rgba(248, 81, 73, 0.1);[m
+[31m-            border: 1px solid var(--accent-red);[m
+[31m-            border-left: 4px solid var(--accent-red);[m
+[31m-            color: #ff7b72;[m
+[31m-            padding: 16px 20px;[m
+[31m-            border-radius: 6px;[m
+[31m-            margin-bottom: 24px;[m
+[31m-            font-family: 'Fira Code', monospace;[m
+[31m-            font-size: 0.9rem;[m
+[31m-        }[m
+[31m-[m
+[31m-        /* --- EMPTY STATE --- */[m
+[31m-        .empty-state {[m
+[31m-            text-align: center;[m
+[31m-            padding: 80px 20px;[m
+[31m-            border: 2px dashed var(--border-color);[m
+[31m-            border-radius: 8px;[m
+[31m-            color: var(--text-muted);[m
+[31m-            font-family: 'Fira Code', monospace;[m
+[31m-            background: rgba(22, 27, 34, 0.3);[m
+[32m+[m[32m        .empty {[m
+[32m+[m[32m            border-style: dashed;[m
+         }[m
+[31m-[m
+[31m-        .empty-state svg {[m
+[31m-            margin-bottom: 15px;[m
+[31m-            opacity: 0.5;[m
+[31m-        }[m
+[31m-[m
+[31m-        /* Custom Scrollbar for Terminals */[m
+[31m-        pre::-webkit-scrollbar { width: 10px; height: 10px; }[m
+[31m-        pre::-webkit-scrollbar-track { background: var(--terminal-bg); }[m
+[31m-        pre::-webkit-scrollbar-thumb { background: #30363d; border-radius: 5px; }[m
+[31m-        pre::-webkit-scrollbar-thumb:hover { background: #8b949e; }[m
+[31m-[m
+     </style>[m
+ </head>[m
+ <body>[m
+[31m-[m
+[31m-    <!-- Top Navigation Bar -->[m
+[31m-    <nav class="top-nav">[m
+[31m-        <div class="nav-brand">[m
+[31m-            <!-- Terminal Icon -->[m
+[31m-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"></polyline><line x1="12" y1="19" x2="20" y2="19"></line></svg>[m
+[31m-            NETWORKING 102[m
+[31m-        </div>[m
+[31m-        <div class="nav-status">[m
+[31m-            <div class="status-dot"></div>[m
+[31m-            admin@192.168.10.215[m
+[31m-        </div>[m
+[31m-    </nav>[m
+[31m-[m
+[31m-    <!-- Main Content -->[m
+[31m-    <div class="main-container">[m
+[31m-        [m
+[31m-        <div class="dashboard-header">[m
+[31m-            <div>[m
+[31m-                <h1>Command Center</h1>[m
+[31m-                <p>Execute configuration and status checks via Telnet.</p>[m
+[31m-            </div>[m
+[31m-            [m
+[31m-            <form method="POST" onsubmit="document.getElementById('runBtn').disabled = true; document.getElementById('runBtn').innerHTML = '<span style=\'color:#8b949e\'>Executing...</span>';">[m
+[31m-                <button type="submit" id="runBtn" class="run-btn">[m
+[31m-                    ./execute_script.sh[m
+[31m-                </button>[m
+[32m+[m[32m    <main>[m
+[32m+[m[32m        <header>[m
+[32m+[m[32m            <p>Networking 102</p>[m
+[32m+[m[32m            <h1>Router status</h1>[m
+[32m+[m[32m            <p>Run the router status checks and view their output here.</p>[m
+[32m+[m[32m        </header>[m
+[32m+[m
+[32m+[m[32m        <section class="panel" aria-labelledby="commands-title">[m
+[32m+[m[32m            <h2 id="commands-title">Status checks</h2>[m
+[32m+[m[32m            <p>This runs the configured router commands.</p>[m
+[32m+[m[32m            <form method="post" onsubmit="document.getElementById('runBtn').disabled = true; document.getElementById('runBtn').textContent = 'Running…';">[m
+[32m+[m[32m                <button type="submit" id="runBtn">Run status checks</button>[m
+             </form>[m
+[31m-        </div>[m
+[32m+[m[32m        </section>[m
+ [m
+[31m-        <!-- Error Display -->[m
+         {% if error %}[m
+[31m-            <div class="error-box">[m
+[31m-                <strong>[EXCEPTION_CAUGHT]</strong> {{ error }}[m
+[31m-            </div>[m
+[32m+[m[32m            <section class="notice" role="alert">[m
+[32m+[m[32m                <strong>Connection failed</strong>[m
+[32m+[m[32m                <p>{{ error }}</p>[m
+[32m+[m[32m            </section>[m
+         {% endif %}[m
+ [m
+[31m-        <!-- Output Terminals -->[m
+         {% if results %}[m
+[31m-            {% for cmd, output in results.items() %}[m
+[31m-                <div class="terminal-window">[m
+[31m-                    <div class="terminal-header">[m
+[31m-                        <div class="window-buttons">[m
+[31m-                            <div class="btn-close"></div>[m
+[31m-                            <div class="btn-min"></div>[m
+[31m-                            <div class="btn-max"></div>[m
+[31m-                        </div>[m
+[31m-                        <div class="terminal-title">bash - session_out.log</div>[m
+[31m-                    </div>[m
+[31m-                    <pre><span class="terminal-prompt">admin@router# {{ cmd }}</span>{{ output }}</pre>[m
+[31m-                </div>[m
+[31m-            {% endfor %}[m
+[31m-            [m
+[32m+[m[32m            <section aria-labelledby="results-title" aria-live="polite">[m
+[32m+[m[32m                <h2 id="results-title">Results</h2>[m
+[32m+[m[32m                {% for cmd, output in results.items() %}[m
+[32m+[m[32m                    <article class="result">[m
+[32m+[m[32m                        <h3><code>{{ cmd }}</code></h3>[m
+[32m+[m[32m                        <pre>{{ output }}</pre>[m
+[32m+[m[32m                    </article>[m
+[32m+[m[32m                {% endfor %}[m
+[32m+[m[32m            </section>[m
+         {% elif not error %}[m
+[31m-            <div class="empty-state">[m
+[31m-                <!-- Empty Database Icon -->[m
+[31m-                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path></svg>[m
+[31m-                <p>// No session data available.</p>[m
+[31m-                <p style="margin-top: 5px; font-size: 0.85rem;">Click the execute button to initiate connection.</p>[m
+[31m-            </div>[m
+[32m+[m[32m            <p class="empty">No results yet. Run the status checks to connect to the router.</p>[m
+         {% endif %}[m
+[31m-[m
+[31m-    </div>[m
+[31m-[m
+[32m+[m[32m    </main>[m
+ </body>[m
+[31m-</html>[m
+\ No newline at end of file[m
+[32m+[m[32m</html>[m
